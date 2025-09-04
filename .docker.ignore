@@ -1,3 +1,18 @@
+# Node modules
 node_modules
 npm-debug.log
+
+# Git files
 .git
+.gitignore
+
+# Docker-related
+Dockerfile
+docker-compose.yml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs and temp files
+*.log
