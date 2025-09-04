@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # E-Commerce Web Application
 
 A **containerized e-commerce web application** built with **Node.js** for the backend and **HTML/CSS/JS** for the frontend. This project is designed to demonstrate **DevOps practices**, including Dockerization, CI/CD pipelines, and deployment.
@@ -47,3 +48,6 @@ commerce-website/
 git clone https://github.com/<your-username>/ecommerce-app.git
 cd ecommerce-website
 
+=======
+# ecommerce-app
+>>>>>>> 8e32afc297dc7567ef0305371628fd3154f595cb
