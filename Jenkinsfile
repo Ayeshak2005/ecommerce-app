@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -17,21 +18,15 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo "Installing dependencies (frontend/backend)..."
-                dir('frontend') {
-                    sh 'npm install'
-                }
-                dir('backend') {
-                    sh 'npm install'
-                }
+                echo "Skipping npm install — dependencies will be installed inside Docker build"
             }
         }
 
         stage('Test') {
             steps {
-                echo "Running tests (skipped if none)"
-                // sh 'cd frontend && npm test'
-                // sh 'cd backend && npm test'
+                echo "Running tests (skipped if handled inside Docker)"
+                // If you have tests, add them here
+                // sh 'npm test'
             }
         }
 
