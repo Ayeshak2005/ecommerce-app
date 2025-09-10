@@ -24,7 +24,6 @@ pipeline {
         stage('Test') {
             steps {
                 echo "Running tests (skipped if handled inside Docker)"
-                // If you have tests, add them here
                 // sh 'npm test'
             }
         }
@@ -43,4 +42,14 @@ pipeline {
                                                  usernameVariable: 'DOCKER_USER',
                                                  passwordVariable: 'DOCKER_PASS')]) {
                     sh """
-                      echo $DOCKER_PASS | docker logi_
+                      echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                      docker push ${env.IMAGE_NAME}:${env.TAG}
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+
