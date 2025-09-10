@@ -38,12 +38,14 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 echo "Logging into Docker Hub and pushing..."
-                withCredentials([usernamePassword(credentialsId: 'e587bc45-a8e1-487f-8dc0-82ee9b087cde',
-                                                 usernameVariable: 'DOCKER_USER',
-                                                 passwordVariable: 'DOCKER_PASS')]) {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
                     sh """
-                      echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                      docker push ${env.IMAGE_NAME}:${env.TAG}
+                        echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                        docker push ${env.IMAGE_NAME}:${env.TAG}
                     """
                 }
             }
@@ -52,4 +54,15 @@ pipeline {
 
     post {
         always {
-
+            echo 'Cleanup local image and workspace'
+            sh "docker rmi ${env.IMAGE_NAME}:${env.TAG} || true"
+            cleanWs()
+        }
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}
