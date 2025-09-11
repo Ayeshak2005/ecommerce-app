@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -51,11 +50,22 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                withCredentials([file(credentialsId: 'kubeconfig-credentials-id', variable: 'KUBECONFIG')]) {
+                    echo "Deploying app to Kubernetes..."
+                    sh 'kubectl apply -f deployment.yaml'
+                    sh 'kubectl apply -f service.yaml'
+                    sh 'kubectl rollout status deployment ecommerce-deployment'
+                }
+            }
+        }
     }
 
     post {
         always {
-            echo 'Cleanup local image and workspace'
+            echo 'Cleanup local Docker image and workspace'
             sh "docker rmi ${env.IMAGE_NAME}:${env.TAG} || true"
             cleanWs()
         }
