@@ -53,11 +53,21 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                withCredentials([file(credentialsId: 'kubeconfig-credentials-id', variable: 'KUBECONFIG')]) {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'aws-creds',   // 👈 store AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY in Jenkins
+                        usernameVariable: 'AWS_ACCESS_KEY_ID',
+                        passwordVariable: 'AWS_SECRET_ACCESS_KEY'
+                    ),
+                    file(credentialsId: 'kubeconfig-credentials-id', variable: 'KUBECONFIG')
+                ]) {
                     echo "Deploying app to Kubernetes..."
-                    sh 'kubectl apply -f deployment.yaml'
-                    sh 'kubectl apply -f service.yaml'
-                    sh 'kubectl rollout status deployment ecommerce-deployment'
+                    sh '''
+                        export AWS_DEFAULT_REGION=eu-north-1
+                        kubectl apply -f deployment.yaml
+                        kubectl apply -f service.yaml
+                        kubectl rollout status deployment ecommerce-deployment
+                    '''
                 }
             }
         }
